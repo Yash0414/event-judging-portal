@@ -1,0 +1,22 @@
+<h2>Judge Panel</h2>
+<table border="1">
+  <tr>
+    <th>ID</th><th>Project</th><th>Members</th><th>School</th><th>Title</th><th>Theme</th><th>Marks</th><th>Comments</th><th>Submit</th>
+  </tr>
+  {% for row in submissions %}
+  <tr>
+    <form method="post">
+      <input type="hidden" name="id" value="{{ row[0] }}">
+      <td>{{ row[0] }}</td>
+      <td>{{ row[1] }}</td>
+      <td>{{ row[2] }}</td>
+      <td>{{ row[3] }}</td>
+      <td>{{ row[4] }}</td>
+      <td>{{ row[5] }}</td>
+      <td><input name="marks" value="{{ row[6] }}"></td>
+      <td><input name="comments" value="{{ row[7] }}"></td>
+      <td><button type="submit">Save</button></td>
+    </form>
+  </tr>
+  {% endfor %}
+</table>
