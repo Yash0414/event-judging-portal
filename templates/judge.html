@@ -2,13 +2,49 @@
 <html>
 <head>
   <title>Judge Panel</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link 
+    rel="stylesheet" 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+  >
+  <style>
+    body {
+      background-color: #f9f9f9;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    .logout-btn {
+      background-color: #dc3545;
+      border: none;
+      color: white;
+      padding: 5px 12px;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+    .logout-btn:hover {
+      background-color: #bb2d3b;
+    }
+    .form-control-sm {
+      padding: 2px 5px;
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 <body class="container py-5">
-  <h2 class="mb-4 text-center">Judge Panel</h2>
+
+  <div class="header">
+    <h2 class="text-center flex-grow-1">Judge Panel</h2>
+    <a href="/logout" class="logout-btn ms-3">Logout</a>
+  </div>
+
   <div class="table-responsive">
-    <table class="table table-bordered table-striped">
-      <thead class="table-dark">
+    <table class="table table-bordered table-striped align-middle">
+      <thead class="table-dark text-center">
         <tr>
           <th>ID</th>
           <th>Project</th>
@@ -26,20 +62,27 @@
         <tr>
           <form method="post">
             <input type="hidden" name="id" value="{{ row[0] }}">
-            <td>{{ row[0] }}</td>
+            <td class="text-center">{{ row[0] }}</td>
             <td>{{ row[1] }}</td>
             <td>{{ row[2] }}</td>
             <td>{{ row[3] }}</td>
             <td>{{ row[4] }}</td>
             <td>{{ row[5] }}</td>
-            <td><input name="marks" value="{{ row[6] or '' }}" class="form-control"></td>
-            <td><input name="comments" value="{{ row[7] or '' }}" class="form-control"></td>
-            <td><button type="submit" class="btn btn-success btn-sm">Save</button></td>
+            <td style="width:100px;">
+              <input type="number" name="marks" value="{{ row[6] or '' }}" class="form-control form-control-sm" min="0" max="100" required>
+            </td>
+            <td style="width:200px;">
+              <input name="comments" value="{{ row[7] or '' }}" class="form-control form-control-sm" placeholder="Add comments" required>
+            </td>
+            <td class="text-center">
+              <button type="submit" class="btn btn-success btn-sm">Save</button>
+            </td>
           </form>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
+
 </body>
 </html>
