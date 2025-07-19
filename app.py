@@ -1,7 +1,12 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session, url_for
 import sqlite3
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key_here'  # Change this to something secure
+
+# Judge credentials (you can later load from .env)
+USERNAME = 'judge'
+PASSWORD = 'event123'
 
 # Initialize DB
 def init_db():
@@ -22,10 +27,12 @@ def init_db():
 
 init_db()
 
+# Home route
 @app.route('/')
 def index():
     return render_template('index.html')
 
+# Student submission form
 @app.route('/student', methods=['GET', 'POST'])
 def student():
     if request.method == 'POST':
@@ -44,8 +51,38 @@ def student():
         return "Submitted Successfully!"
     return render_template('student.html')
 
+# Judge login
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if username == USERNAME and password == PASSWORD:
+            session['logged_in'] = True
+            return redirect(url_for('judge'))
+        else:
+            return "<h3 style='color:red;'>Invalid credentials</h3><a href='/login'>Try again</a>"
+    return '''
+        <h2 style='text-align:center;'>Judge Login</h2>
+        <form method="post" style="width:300px;margin:auto;">
+            <input type="text" name="username" placeholder="Username" required><br><br>
+            <input type="password" name="password" placeholder="Password" required><br><br>
+            <input type="submit" value="Login">
+        </form>
+    '''
+
+# Logout route
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)
+    return redirect(url_for('login'))
+
+# Judge panel
 @app.route('/judge', methods=['GET', 'POST'])
 def judge():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
     if request.method == 'POST':
@@ -59,6 +96,5 @@ def judge():
     conn.close()
     return render_template('judge.html', submissions=submissions)
 
-
-
-
+if __name__ == '__main__':
+    app.run(debug=True)
